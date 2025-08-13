@@ -26,7 +26,7 @@ Before you begin, ensure you have the following installed:
 * Python 3.7+
 * `pip` (Python package installer)
 * Visual Studio Code
-* Go to this drive https://drive.google.com/drive/folders/19o20TH4Nol-QlZVSoVQqqDrloz4e-Rhw   and download the model to save in your root dir
+* Go to this drive https://drive.google.com/drive/folders/19o20TH4Nol-QlZVSoVQqqDrloz4e-Rhw   and download `lstm_autoencoder.keras` model to save in your root dir
 
 ## Setup & Installation
 
