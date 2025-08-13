@@ -42,16 +42,37 @@ HTML_TEMPLATE = """
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        /* Style the file input button */
+        input[type="file"] {
+            display: none;
+        }
+        .custom-file-upload {
+            border: 1px solid #ccc;
+            display: inline-block;
+            padding: 8px 12px;
+            cursor: pointer;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            border-color: #d1d5db;
+        }
     </style>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
     <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-3xl">
         <h1 class="text-3xl font-bold text-gray-800 mb-2">Log Anomaly Detector</h1>
-        <p class="text-gray-600 mb-6">Paste raw Windows log text or enter a manual sequence to check for anomalies. The model expects a sequence of 6 numbers.</p>
+        <p class="text-gray-600 mb-6">Upload a log file, paste raw text, or enter a manual sequence to check for anomalies.</p>
 
         <form id="anomaly-form">
             <div class="mb-4">
-                <label for="log_data" class="block text-sm font-medium text-gray-700 mb-1">Paste Raw Log Text Here</label>
+                 <label for="file-upload" class="custom-file-upload font-medium text-gray-700 hover:bg-gray-50">
+                    📂 Upload Log File
+                </label>
+                <input id="file-upload" type="file" accept=".txt,.log"/>
+                <span id="file-name" class="ml-3 text-sm text-gray-600">No file selected</span>
+            </div>
+
+            <div class="mb-4">
+                <label for="log_data" class="block text-sm font-medium text-gray-700 mb-1">Or Paste Raw Log Text Here</label>
                 <textarea id="log_data" name="log_data" rows="8" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Paste content from a file like System_log.txt..."></textarea>
             </div>
             <div class="text-center my-4 text-gray-500 font-semibold">OR</div>
@@ -75,6 +96,22 @@ HTML_TEMPLATE = """
         // Make the Python THRESHOLD variable available to JavaScript
         const THRESHOLD = {{ THRESHOLD }};
 
+        // --- File Upload Handler ---
+        document.getElementById('file-upload').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                document.getElementById('file-name').textContent = file.name;
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    // When the file is read, put its content into the textarea
+                    document.getElementById('log_data').value = e.target.result;
+                };
+                reader.readAsText(file);
+            }
+        });
+
+
+        // --- Form Submission Handler ---
         document.getElementById('anomaly-form').addEventListener('submit', async function(event) {
             event.preventDefault();
 
@@ -94,16 +131,19 @@ HTML_TEMPLATE = """
             resultContent.innerHTML = '';
 
             let payload = {};
-            // Prioritize raw log data if it exists
+            // Prioritize raw log data (from file upload or paste) if it exists
             if (logData.trim().length > 0) {
                 payload = { log_text: logData };
-            } else {
+            } else if (sequenceInput.trim().length > 0) {
                 const sequenceArray = sequenceInput.split(',').map(item => parseInt(item.trim())).filter(item => !isNaN(item));
                 if (sequenceArray.length === 0) {
-                    showError('Please paste log data or enter a valid sequence of numbers.');
+                    showError('Manual sequence is invalid. Please enter numbers separated by commas.');
                     return;
                 }
                 payload = { sequence: sequenceArray };
+            } else {
+                showError('Please upload a file, paste log text, or enter a manual sequence.');
+                return;
             }
 
             try {
