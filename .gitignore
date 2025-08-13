@@ -1,0 +1,5 @@
+venv/
+dataset/Dataset-ThreatSlayers/
+lstm_autoencoder.h5
+dataset/WindowsSysLogs4Testing/
+lstm_autoencoder.keras
