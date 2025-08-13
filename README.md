@@ -1,3 +1,5 @@
+* This repo was set up as an example for student to understand about deploying AI model in local machines then hosting it for others to use. 
+
 # AI Log Anomaly Detector
 
 A full-stack web application that uses a pre-trained LSTM Autoencoder model to detect anomalies in sequences of log event IDs.
