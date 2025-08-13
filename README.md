@@ -4,14 +4,14 @@ A full-stack web application that uses a pre-trained LSTM Autoencoder model to d
 
 ## Overview
 
-This project provides a simple and interactive web interface to an AI model trained for anomaly detection. Users can either input a sequence of numerical log IDs directly or paste raw text from a Windows System Log file. The application will automatically parse the Event IDs from the text and use a Keras/TensorFlow model to determine if the sequence is normal or anomalous based on its reconstruction error.
+This project provides a simple and interactive web interface to an AI model trained for anomaly detection. Users can upload a log file, paste raw log text, or input a sequence of numerical log IDs directly. The application will automatically parse the Event IDs and use a Keras/TensorFlow model to determine if the sequence is normal or anomalous based on its reconstruction error.
 
 The entire application, including the Python backend (Flask) and the HTML/CSS/JS frontend, is contained within a single `app.py` file for simplicity and ease of deployment.
 
 ## Features
 
 * **Interactive Web UI:** A clean user interface for submitting log data.
-* **Flexible Input:** Supports both direct comma-separated number sequences and raw text log file content.
+* **Flexible Input:** Supports file uploads, raw text pasting, and manual sequence entry.
 * **Automatic Log Parsing:** Intelligently extracts Event IDs from raw log text.
 * **Real-time Analysis:** Get instant feedback on whether a sequence is normal or an anomaly.
 * **Detailed Results:** Shows the model's reconstruction error and the threshold used for classification.
@@ -23,9 +23,8 @@ The entire application, including the Python backend (Flask) and the HTML/CSS/JS
 Before you begin, ensure you have the following installed:
 * Python 3.7+
 * `pip` (Python package installer)
-
-* Go to this drive https://drive.google.com/drive/folders/19o20TH4Nol-QlZVSoVQqqDrloz4e-Rhw
- and download the model to save in your root dir
+* Visual Studio Code
+* Go to this drive https://drive.google.com/drive/folders/19o20TH4Nol-QlZVSoVQqqDrloz4e-Rhw   and download the model to save in your root dir
 
 ## Setup & Installation
 
@@ -67,21 +66,37 @@ Before you begin, ensure you have the following installed:
 1.  **Open your web browser** and navigate to:
     http://127.0.0.1:5000
 
-2.  You will see the **Log Anomaly Detector** user interface. You have two ways to input data:
+2.  You will see the **Log Anomaly Detector** user interface. You have three ways to input data:
+    * **Upload a File:** Click the "Upload Log File" button and select a `.txt` or `.log` file.
+    * **Paste Raw Text:** Copy and paste content from a log file into the text area.
+    * **Enter Manually:** Type a comma-separated sequence of numbers into the manual input box.
 
-    * **Option 1: Paste Raw Log Text (Recommended)**
-        * Copy the content from a Windows log file (like `System_log.txt`).
-        * Paste the text into the large text area.
-        * The app will automatically find and process the Event IDs.
+3.  Click the **"Check for Anomaly"** button. The result will be displayed on the page.
 
-    * **Option 2: Enter Sequence Manually**
-        * Enter a sequence of numbers into the "Manual Sequence Input" box, separated by commas.
-        * *Example of a normal sequence:* `10, 25, 10, 3, 18, 5`
-        * *Example of a potentially anomalous sequence:* `10, 25, 100, 3, 18, 5`
+## Sharing for Testing (Port Forwarding with VS Code)
 
-3.  Click the **"Check for Anomaly"** button.
+To allow others to test your application over the internet, you can use the built-in port forwarding feature in VS Code.
 
-4.  The result will be displayed below the form, showing the status (Normal or Anomaly Detected) and the model's reconstruction error.
+1.  **Run the Application:** Make sure your app is running via `python app.py` in the VS Code terminal.
+
+2.  **Open the Ports View:**
+    * Go to the **"Ports"** tab in the bottom panel of VS Code (next to Terminal, Debug Console, etc.).
+    * If you don't see it, open the Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P`) and type `Ports: Focus on Ports View`.
+
+3.  **Forward the Port:**
+    * In the Ports view, click the **"Forward a Port"** button.
+    * When prompted, enter the port number `5000` and press Enter.
+
+4.  **Authenticate (First Time Only):**
+    * VS Code will ask you to sign in with a **GitHub** or **Microsoft** account. This is required to create the secure tunnel. Follow the login prompts.
+
+5.  **Set Port to Public:**
+    * A new entry for port 5000 will appear in the list. By default, it is "Private".
+    * Right-click on the forwarded port, select **"Port Visibility"**, and choose **"Public"**.
+
+6.  **Share the URL:**
+    * The "Forwarded Address" column will now show a public URL (e.g., `https://random-words-5000.usw2.devtunnels.ms/`).
+    * Click the "Copy" icon next to the URL and share it with your testers. They can now access your running application from their own browsers.
 
 ## (Optional) Retraining the Model
 
@@ -96,4 +111,3 @@ If you wish to retrain the model with new data:
     *(Note: You may need to escape the parentheses in some shells, as shown above)*
 
 3.  This will generate a new `lstm_autoencoder.keras` file in the project's root directory, which the application will use the next time it is started.
-# AI_Log_Anomaly_Detector
